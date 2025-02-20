@@ -8,6 +8,10 @@ import re
 import random as rng
 import json 
 
+def load_config():
+    with open("config.json", "r") as f:
+        return json.load(f)
+    
 def scrolling_text(text, delay=0.03):
     """Prints text with a scrolling effect."""
     for char in text:
@@ -33,16 +37,17 @@ def split_into_paragraphs(text, sentences_per_paragraph=4):
     return paragraphs
 
 # List of available models
-model = 
-rand_prompt = 
+config = load_config()
+model = config["model"]
+rand_prompt = config["rand_prompt"]
+debate_topic = config["debate_topic"]
+debate_mode = 0
 
 # Set up logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
-
-
 
 # Interactive inputs for conversation parameters
 convo_num = rng.randint(10,500)
@@ -62,7 +67,7 @@ while True:
                 CONVO = # of conversations between movels
                 SLEEP = Time waited between model responses
                 INSTRUCTION = specific behavior instructions for model.
-                DEBATE = Start AI Debate      
+                DEBATE = Start AI Debate (Yes/No)      
                 DONE = Start AI Conversations
                       
                 QUIT = Quit Program
@@ -185,8 +190,10 @@ while True:
                     
                     time.sleep(int(sleep_time))
                     
-                    if i >= args.exchanges - rng.randint(1,args.exchanges):
+                    if i >= args.exchanges - rng.randint(1,args.exchanges) and debate_mode == 0:
                         instruction = f"""when talking add some attitude and life to the conversation, be as informal as possiable, you can add in some phylosophical speech now and then but sound natural. repond to the prompt as you normally would but incorporate the topic of {rng.choice(rand_prompt)} into the conversation seemlessly and relate the two, make sure to tie them together in the conversation as smooth as possiable. repond to the prompt as you normally would incorporate a question about the conversation as seemlessly as possiable. """   
+                    elif debate_mode == 1: #needs adjusting for debate mode
+                        instruction = debate_topic
                     else:
                         instruction = instruction
                     #logging.info(f"Current instruction: {instruction}")
