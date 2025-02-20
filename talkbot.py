@@ -6,6 +6,7 @@ import sys
 import textwrap
 import re
 import random as rng
+import json 
 
 def scrolling_text(text, delay=0.03):
     """Prints text with a scrolling effect."""
@@ -32,14 +33,8 @@ def split_into_paragraphs(text, sentences_per_paragraph=4):
     return paragraphs
 
 # List of available models
-model = ["dolphin-mistral", "dolphin-phi", "wizard-vicuna-uncensored:13b", "llama2-uncensored"]
-rand_prompt = ["Hitler", "Aliens", "AI Overlords", "Anime", "bigfoot having sex with ET",
- "lochness monster", "climate change", "Team America", "Michael Jackson", "Bloody Marry",
- "Nuclear Hollocaust", "blue waffle", "Emu War", "Radio Frequency", "Toe Fungus","Neuro Science",
- "Rust", "Ghosts", "Real life Terminator movie", "Meth as a health care option", "sexual positions for animals",
- "supernatural events explained by science","talking shoes","Dungeons and Dragons", "telekinesis",
- "mind reading","Mutant powers", "skibidy Rizz", "Transformers in real life", "Angels", "Demons",
- "Quantum entanglement", "Time Travel", "cold death of the universe"]
+model = 
+rand_prompt = 
 
 # Set up logging
 logging.basicConfig(
@@ -66,8 +61,8 @@ while True:
                 PROMPT = Initial prompt to start conversation
                 CONVO = # of conversations between movels
                 SLEEP = Time waited between model responses
-                INSTRUCTION = Instruction for model to follow (added at end of prompt)
-                      
+                INSTRUCTION = specific behavior instructions for model.
+                DEBATE = Start AI Debate      
                 DONE = Start AI Conversations
                       
                 QUIT = Quit Program
@@ -79,14 +74,16 @@ while True:
             print("Available models:", model)
             model1_choice = input("Enter index of model 1: ")
             model2_choice = input("Enter index of model 2: ")
+        case "PROMPT":
+            starting_prompt = input("Enter starting prompt: ")
         case "CONVO":
             convo_num = input("Enter number of conversations: ")
         case "SLEEP":
             sleep_time = input("Enter time waited between model responses (in seconds): ")
-        case "PROMPT":
-            starting_prompt = input("Enter starting prompt: ")
         case "INSTRUCTION":
             instruction = input("Enter instruction for model to follow: ")
+        case "DEBATE":
+            print("Debate mode not yet implemented.")
         case "QUIT":
             print("Goodbye!")
             exit()
@@ -168,7 +165,7 @@ while True:
                         wrapped_para = textwrap.fill(para, width=100)
                         scrolling_text(wrapped_para)
                         print()  # Add an extra line break between paragraphs
-                    print("________________________________")
+                    print("________________(press spacebar to end)________________ ")
                     print("\n")
                     
                     time.sleep(int(sleep_time))
@@ -183,7 +180,7 @@ while True:
                         wrapped_para = textwrap.fill(para, width=100)
                         scrolling_text(wrapped_para)
                         print()  # Add an extra line break between paragraphs
-                    print("_________________________________")
+                    print("________________(press spacebar to end)________________ ")
                     print("\n")
                     
                     time.sleep(int(sleep_time))
@@ -192,12 +189,9 @@ while True:
                         instruction = f"""when talking add some attitude and life to the conversation, be as informal as possiable, you can add in some phylosophical speech now and then but sound natural. repond to the prompt as you normally would but incorporate the topic of {rng.choice(rand_prompt)} into the conversation seemlessly and relate the two, make sure to tie them together in the conversation as smooth as possiable. repond to the prompt as you normally would incorporate a question about the conversation as seemlessly as possiable. """   
                     else:
                         instruction = instruction
-                    logging.info(f"Current instruction: {instruction}")
+                    #logging.info(f"Current instruction: {instruction}")
                     current_prompt = response2 
-                    # print("***************")
-                    # print(current_prompt)
-                    # print("***************")
-                    # time.sleep(30)
+                  
 
             if __name__ == "__main__":
                 main()

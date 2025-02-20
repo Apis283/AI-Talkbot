@@ -1,0 +1,47 @@
+{
+    "model":["dolphin-mistral",
+     "dolphin-phi", 
+     "wizard-vicuna-uncensored:13b",
+     "llama2-uncensored"],
+
+    "rand_prompt":["Hitler",
+     "Aliens",
+     "AI Overlords",
+     "Anime",
+     "bigfoot having sex with ET",
+     "lochness monster", "climate change",
+     "Team America", "Michael Jackson",
+     "Bloody Marry",
+     "Nuclear Hollocaust",
+     "blue waffle",
+     "Emu War",
+     "Radio Frequency",
+     "Toe Fungus",
+     "Neuro Science",
+     "Rust", 
+     "Ghosts", 
+     "Real life Terminator movie", 
+     "Meth as a health care option", 
+     "sexual positions for animals",
+     "supernatural events explained by science",
+     "talking shoes","Dungeons and Dragons", 
+     "telekinesis",
+     "mind reading",
+     "Mutant powers",
+     "skibidy Rizz",
+     "Transformers in real life",
+     "Angels",
+     "Demons",
+     "Quantum entanglement",
+     "Time Travel",
+     "cold death of the universe"],
+
+    "debate_topic":["Is the earth flat?",
+     "Is the moon landing fake?",
+     "Is the government hiding aliens?",
+     "Is the government hiding time travel?",
+     "Is the government hiding the cure for cancer?"]
+
+   
+    
+}
