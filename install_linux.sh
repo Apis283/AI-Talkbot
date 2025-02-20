@@ -1,5 +1,4 @@
-# Linux Installation Script
-#!/bin/bash
+!/bin/bash
 
 # Ensure Python is installed
 if ! command -v python3 &> /dev/null

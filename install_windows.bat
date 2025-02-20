@@ -1,28 +1,19 @@
-# Windows Installation Script
 @echo off
+title Python Environment Setup for Windows
+echo ========================================
+echo    Python Environment Setup Script
+echo ========================================
 
-REM Ensure Python is installed
+:: Check if Python is installed
+echo Checking for Python installation...
 python --version >nul 2>&1
-if %ERRORLEVEL% neq 0 (
-    echo Python is not installed. Please install Python from https://www.python.org/downloads/ and ensure it is added to PATH.
+if %errorlevel% neq 0 (
+    echo Python is not installed or not added to PATH.
+    echo Please install Python from https://www.python.org/downloads/ and ensure it is added to PATH.
+    pause
     exit /b
+) else (
+    echo Python is installed.
 )
 
-REM Install pip dependencies
-pip install subprocess-tee argparse textwrap logging
-if %ERRORLEVEL% neq 0 (
-    echo Failed to install Python dependencies. Check your Python and pip installation.
-    exit /b
-)
-
-REM Check for Ollama CLI
-ollama --version >nul 2>&1
-if %ERRORLEVEL% neq 0 (
-    echo Ollama CLI is not installed. Please download it from https://ollama.ai/docs and add it to PATH.
-    exit /b
-)
-
-REM Confirm setup
-echo Installation complete. Ready to run the Python script.
-exit /b
-
+:: Check if pip is
