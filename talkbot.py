@@ -8,6 +8,8 @@ import re
 import random as rng
 import json 
 import os
+from pynput import keyboard
+import threading
 
 def load_config():
     config_path = os.path.join(os.path.dirname(__file__), "config.json")
@@ -17,6 +19,8 @@ def load_config():
 def scrolling_text(text, delay=0.03):
     """Prints text with a scrolling effect."""
     for char in text:
+        if stop_flag:
+            return
         sys.stdout.write(char)
         sys.stdout.flush()
         time.sleep(delay)
@@ -38,12 +42,38 @@ def split_into_paragraphs(text, sentences_per_paragraph=4):
             paragraphs.append(paragraph)
     return paragraphs
 
-# List of available models
+def on_press(key):
+    global stop_flag, conversation_active
+    if conversation_active and key == keyboard.Key.esc:
+        print("\nEscape key pressed! Exiting loop.\n")
+        stop_flag = True
+
+def query_model(model_name, prompt):
+                """Query an Ollama model with a given prompt."""
+                try:
+                    result = subprocess.run(
+                        ["ollama", "run", model_name, "prompt", prompt + instruction],
+                        capture_output=True,
+                        text=True,
+                    )
+                    if result.returncode != 0:
+                        raise Exception(result.stderr.strip())
+                    return result.stdout.strip()
+                except Exception as e:
+                    logging.error(f"Error querying {model_name}: {e}")
+                    return None
+
+listener = keyboard.Listener(on_press=on_press)
+listener.start()
+
+
 config = load_config()
 model = config["model"]
 rand_prompt = config["rand_prompt"]
 debate_topic = config["debate_topic"]
 debate_mode = 0
+stop_flag = False
+conversation_active = False
 
 # Set up logging
 logging.basicConfig(
@@ -63,6 +93,8 @@ sound natural, dont say hey there or hey man all the time.repond to the prompt a
 conversation as seemlessly as possiable. """
 
 while True:
+    stop_flag = False
+    conversation_active = False
     selection = input("""\nSelect the following:
                 MODEL = Model selections
                 PROMPT = Initial prompt to start conversation
@@ -112,24 +144,11 @@ while True:
 
 
 
-            def query_model(model_name, prompt):
-                """Query an Ollama model with a given prompt."""
-                try:
-                    result = subprocess.run(
-                        ["ollama", "run", model_name, "prompt", prompt + instruction],
-                        capture_output=True,
-                        text=True,
-                    )
-                    if result.returncode != 0:
-                        raise Exception(result.stderr.strip())
-                    return result.stdout.strip()
-                except Exception as e:
-                    logging.error(f"Error querying {model_name}: {e}")
-                    return None
+            
 
             def main():
-                global instruction
-
+                global instruction, stop_flag, conversation_active
+                conversation_active = True
                 # Parse arguments for conversation settings.
                 parser = argparse.ArgumentParser(
                     description="Run a conversation between two Ollama models."
@@ -164,34 +183,58 @@ while True:
                     
                     # Query first model
                     response1 = query_model(args.model1, current_prompt)
-                    if response1 is None:
-                        logging.error("Conversation terminated due to error.")
+                    if response1 is None or stop_flag:
+                        logging.error("Conversation terminated.")
                         break
                     paragraphs1 = split_into_paragraphs(f"{args.model1}: {response1}", sentences_per_paragraph=4)
+                   
+                   
                     for para in paragraphs1:
+                        if stop_flag:
+                            break
                         wrapped_para = textwrap.fill(para, width=100)
                         scrolling_text(wrapped_para)
                         print()  # Add an extra line break between paragraphs
-                    print("________________(press spacebar to end)________________ ")
+                    if stop_flag:
+                       break
+                    print("________________(press esc to end)________________ ")
                     print("\n")
+                    
+                    if stop_flag:
+                        break                  
+                    
                     
                     time.sleep(int(sleep_time))
                     
+
+
                     # Query second model with first model's response as prompt
                     response2 = query_model(args.model2, response1)
-                    if response2 is None:
-                        logging.error("Conversation terminated due to error.")
+                    if response2 is None or stop_flag:
+                        logging.error("Conversation terminated.")
                         break
                     paragraphs2 = split_into_paragraphs(f"{args.model2}: {response2}", sentences_per_paragraph=4)
+                    
+                    
                     for para in paragraphs2:
+                        if stop_flag:
+                            break
                         wrapped_para = textwrap.fill(para, width=100)
                         scrolling_text(wrapped_para)
                         print()  # Add an extra line break between paragraphs
-                    print("________________(press spacebar to end)________________ ")
+                    if stop_flag:
+                        break
+                    print("________________(press esc to end)________________ ")
                     print("\n")
                     
+                    if stop_flag:
+                        break
+
+
                     time.sleep(int(sleep_time))
                     
+
+
                     if i >= args.exchanges - rng.randint(1,args.exchanges) and debate_mode == 0:
                         instruction = f"""when talking add some attitude and life to the conversation, be as informal as possiable, you can add in some phylosophical speech now and then but sound natural. repond to the prompt as you normally would but incorporate the topic of {rng.choice(rand_prompt)} into the conversation seemlessly and relate the two, make sure to tie them together in the conversation as smooth as possiable. repond to the prompt as you normally would incorporate a question about the conversation as seemlessly as possiable. """   
                     elif debate_mode == 1: #needs adjusting for debate mode
@@ -201,6 +244,15 @@ while True:
                     #logging.info(f"Current instruction: {instruction}")
                     current_prompt = response2 
                   
-
+                conversation_active = False
+                stop_flag = False
             if __name__ == "__main__":
-                main()
+                try:
+                    main()
+                except KeyboardInterrupt:
+                    print("\nConversation terminated.")
+                    stop_flag = True
+                    conversation_active = False
+                    continue
+            
+
