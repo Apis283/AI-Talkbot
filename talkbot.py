@@ -151,7 +151,7 @@ def create_main_window():
     window.setGeometry(100, 100, 800, 600)  # x, y, width, height
 
     # Set the background color of the main window
-    window.setStyleSheet("background-color: darkgrey;")
+    window.setStyleSheet("background-color: rgba(92, 105, 35, 255);")
 
     layout = QGridLayout()
 
