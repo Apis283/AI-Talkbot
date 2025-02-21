@@ -72,6 +72,7 @@ model = config["model"]
 rand_prompt = config["rand_prompt"]
 debate_topic = config["debate_topic"]
 debate_mode = False
+debate_rand = False
 stop_flag = False
 conversation_active = False
 debate_input = ""
@@ -245,11 +246,13 @@ while True:
                     time.sleep(int(sleep_time))
                     
 
-
+                    # !!!!redo this prompt -- add condensed sentences!!!!
                     if i >= args.exchanges - rng.randint(1,args.exchanges) and debate_mode == False:
                         instruction = f"""when talking add some attitude and life to the conversation, be as informal as possiable, you can add in some phylosophical speech now and then but sound natural. repond to the prompt as you normally would but incorporate the topic of {rng.choice(rand_prompt)} into the conversation seemlessly and relate the two, make sure to tie them together in the conversation as smooth as possiable. repond to the prompt as you normally would incorporate a question about the conversation as seemlessly as possiable. """   
-                    elif debate_mode == True: #needs adjusting for debate mode
+                    elif debate_mode == True and debate_rand == False: #needs adjusting for debate mode
                         instruction = f"debate the topic of {debate_input} argue the point opposite of the prompt, giving facts and the best evidence for your position "
+                    elif debate_mode == True and debate_rand == True:
+                        instruction = f"debate the topic of {rng.choice(debate_topic)} argue the point opposite of the prompt, giving facts and the best evidence for your position "
                     else:
                         instruction = instruction
                     #logging.info(f"Current instruction: {instruction}")
