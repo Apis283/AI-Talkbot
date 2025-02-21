@@ -71,9 +71,10 @@ config = load_config()
 model = config["model"]
 rand_prompt = config["rand_prompt"]
 debate_topic = config["debate_topic"]
-debate_mode = 0
+debate_mode = False
 stop_flag = False
 conversation_active = False
+debate_input = ""
 
 # Set up logging
 logging.basicConfig(
@@ -92,6 +93,7 @@ be as informal as possiable, you can add in some phylosophical speech now and th
 sound natural, dont say hey there or hey man all the time.repond to the prompt as you normally would incorporate a question about the 
 conversation as seemlessly as possiable. """
 
+
 while True:
     stop_flag = False
     conversation_active = False
@@ -101,13 +103,15 @@ while True:
                 CONVO = # of conversations between movels
                 SLEEP = Time waited between model responses
                 INSTRUCTION = specific behavior instructions for model.
-                DEBATE = Start AI Debate (Yes/No)      
+                DEBATE = Start AI Debate mode (Yes/No)
+                TOPIC = Enter debate topic      
                 DONE = Start AI Conversations
                       
                 QUIT = Quit Program
                     
                 Enter Selection: """)
     print("\n")
+    
     match selection.upper():
         case "MODEL":
             print("Available models:", model)
@@ -122,9 +126,19 @@ while True:
         case "INSTRUCTION":
             instruction = input("Enter instruction for model to follow: ")
         case "DEBATE":
-            print("Debate mode not yet implemented.")
+            debate_mode = True
+            print("Debate mode enabled.")
+            time.sleep(3)
+        case "TOPIC":
+            if debate_mode == False:
+                print("Debate mode not enabled.")
+                time.sleep(3)
+            else:
+                debate_input = input("Enter debate topic: ")
+
         case "QUIT":
             print("Goodbye!")
+            time.sleep(3)
             exit()
         case "DONE":
             print(f"""
@@ -139,6 +153,7 @@ while True:
                   -instruction: {instruction}
                   
                   """)
+            time.sleep(5)
             
 
 
@@ -195,8 +210,6 @@ while True:
                         wrapped_para = textwrap.fill(para, width=100)
                         scrolling_text(wrapped_para)
                         print()  # Add an extra line break between paragraphs
-                    if stop_flag:
-                       break
                     print("________________(press esc to end)________________ ")
                     print("\n")
                     
@@ -222,8 +235,6 @@ while True:
                         wrapped_para = textwrap.fill(para, width=100)
                         scrolling_text(wrapped_para)
                         print()  # Add an extra line break between paragraphs
-                    if stop_flag:
-                        break
                     print("________________(press esc to end)________________ ")
                     print("\n")
                     
@@ -235,10 +246,10 @@ while True:
                     
 
 
-                    if i >= args.exchanges - rng.randint(1,args.exchanges) and debate_mode == 0:
+                    if i >= args.exchanges - rng.randint(1,args.exchanges) and debate_mode == False:
                         instruction = f"""when talking add some attitude and life to the conversation, be as informal as possiable, you can add in some phylosophical speech now and then but sound natural. repond to the prompt as you normally would but incorporate the topic of {rng.choice(rand_prompt)} into the conversation seemlessly and relate the two, make sure to tie them together in the conversation as smooth as possiable. repond to the prompt as you normally would incorporate a question about the conversation as seemlessly as possiable. """   
-                    elif debate_mode == 1: #needs adjusting for debate mode
-                        instruction = debate_topic
+                    elif debate_mode == True: #needs adjusting for debate mode
+                        instruction = f"debate the topic of {debate_input} argue the point opposite of the prompt, giving facts and the best evidence for your position "
                     else:
                         instruction = instruction
                     #logging.info(f"Current instruction: {instruction}")
