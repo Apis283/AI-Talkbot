@@ -9,7 +9,7 @@ import random as rng
 import json 
 import os
 from pynput import keyboard
-# import threading
+
 
 def load_config():
     config_path = os.path.join(os.path.dirname(__file__), "config.json")
@@ -71,7 +71,7 @@ config = load_config()
 model = config["model"]
 rand_prompt = config["rand_prompt"]
 debate_topic = config["debate_topic"]
-debate_mode = False
+debate_mode = "Off"
 debate_rand = False
 stop_flag = False
 conversation_active = False
@@ -127,32 +127,91 @@ while True:
                 Enter Selection: """)
                 match option_selection.upper():
                     case "MODEL":
-                        print("Available models:", model)
-                        model1_choice = input("Enter index of model 1: ")
-                        model2_choice = input("Enter index of model 2: ")
+                        print("\nCurrent models are randomly selected.")
+                        choose_model = input("\nWould you like to choose the models? (Yes/No): ")
+                        if choose_model.upper() == "YES":
+                            print("Available models:", model)
+                            model1_choice = input("Enter index of model 1: ")
+                            model2_choice = input("Enter index of model 2: ")
+                            print(f"Selected models: {model[int(model1_choice)]} and {model[int(model2_choice)]}")
+                            time.sleep(3)
+                        elif choose_model.upper() == "NO":
+                            print("\nModels will stay randomly selected.\n")
+                            time.sleep(3)
+                        else:
+                            print("\nInvalid selection.\n")
+                            time.sleep(3)
                     case "PROMPT":
                         print(f"\nCurrent prompt: {starting_prompt}\n")
-                        starting_prompt = input("\nEnter starting prompt: ")
+                        choose_prompt = input("\nWould you like to change the prompt? (Yes/No): ")
+                        if choose_prompt.upper() == "YES":
+                            starting_prompt = input("\nEnter starting prompt: ")
+                            print("\nPrompt updated.\n")
+                            time.sleep(3)
+                        elif choose_prompt.upper() == "NO":
+                            print("\nPrompt will stay the same.\n")
+                            time.sleep(3)
+                        else:
+                            print("\nInvalid selection\n")
+                            time.sleep(3)
                     case "CONVO":
                         print("\nCurrent number of conversations is random!\n")
-                        convo_num = input("Enter number of conversations: ")
+                        convo_choice = input("\nWould you like to change the number of conversations? (Yes/No): ")
+                        if convo_choice.upper() == "YES":
+                            convo_num = input("Enter number of conversations: ")
+                            print(f"\nNumber of conversations changed to {convo_num}.\n")
+                            time.sleep(3)
+                        elif convo_choice.upper() == "NO":
+                            print("\nNumber of conversations will stay random.\n")
+                            time.sleep(3)
+                        else:
+                            print("\nInvalid selection.\n")
+                            time.sleep(3)
                     case "INSTRUCTION":
                         print(f"\nCurrent instruction: {instruction}\n")
-                        instruction = input("Enter instruction for model to follow: ")
+                        instruciton_choice = input("\nWould you like to change the instruction? (Yes/No): ")
+                        if instruciton_choice.upper() == "YES":
+                            instruction = input("Enter instruction for model to follow: ")
+                        elif instruciton_choice.upper() == "NO":
+                            print("\nInstruction will stay the same.\n")
+                            time.sleep(3)
+                        else:
+                            print("\nInvalid selection.\n")
+                            time.sleep(3)
                     case "DEBATE":
-                        debate_switch = input("\nWould you like to start debate mode? (Yes/No): ")
-                        if debate_switch.upper() == "YES":
-                            debate_mode = True
+                        print(f"\nDebate mode is currently {debate_mode}.\n")
+                        debate_switch = input("\nDebate mode (On/Off): ")
+                        if debate_switch.upper() == "ON":
+                            debate_mode = "On"
                             print("Debate mode enabled.")
                             time.sleep(3)
-                        else:
+                        elif debate_switch.upper() == "OFF":
+                            debate_mode = "Off"
                             print("Debate mode disabled.")
-                    case "TOPIC":
-                        if debate_mode == False:
-                            print("Debate mode not enabled.")
                             time.sleep(3)
                         else:
-                            debate_input = input("Enter debate topic: ")
+                            print("\nInvalid selection. Please enter 'On' or 'Off'.\n")
+                            time.sleep(3)
+                    case "TOPIC":
+                        if debate_mode == "Off":
+                            print("Debate mode not enabled. \nplease enable debate mode to use this feature.\n")
+                            time.sleep(3)
+                        elif debate_mode == "On":
+                            debate_choice = input("\nWould you like to enter a debate topic? (Yes/No): ")
+                            if debate_choice.upper() == "YES":
+                                debate_input = input("Enter debate topic: ")
+                                print(f'Debate topic set to "{debate_input}".')
+                                time.sleep(3)
+                            elif debate_choice.upper() == "NO":
+                                print("\nDebate topic will be picked randomly.\n")
+                                debate_rand = True
+                                time.sleep(3)
+                            else:
+                                print("\nInvalid selection.\n")
+                                time.sleep(3)
+                        else:
+                            print("\nInvalid selection.\n")
+                            time.sleep(3)
                     case "BACK":
                         break
         case "QUIT":
@@ -160,24 +219,6 @@ while True:
             time.sleep(3)
             exit()
         case "START":
-            # print(f"""
-                  
-            #       The following settings will be applied: 
-                 
-            #       -model 1 choice: {model[int(model1_choice)]}
-            #       -model 2 choice: {model[int(model2_choice)]}
-            #       -starting prompt: {starting_prompt}
-            #       -convo number: {convo_num}
-            #       -sleep time: {int(sleep_time)} seconds
-            #       -instruction: {instruction}
-                  
-            #       """)
-            # time.sleep(1)
-            
-
-
-
-
             
 
             def main():
