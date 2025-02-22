@@ -66,6 +66,11 @@ def query_model(model_name, prompt):
 listener = keyboard.Listener(on_press=on_press)
 listener.start()
 
+# Set up logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
 
 config = load_config()
 model = config["model"]
@@ -76,14 +81,6 @@ debate_rand = False
 stop_flag = False
 conversation_active = False
 debate_input = ""
-
-# Set up logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
-)
-
-# Interactive inputs for conversation parameters
 convo_num = rng.randint(10,500)
 starting_prompt = "pick any random conversational topic, and add a one paragraph explination"
 model1_choice = rng.randint(0,3)
@@ -91,7 +88,7 @@ model2_choice = rng.randint(0,3)
 sleep_time = 1
 instruction_list = config["instruction_key"]
 instruction = " ".join(instruction_list)
-
+debate_instruction = ""
 
 
 while True:
@@ -252,8 +249,20 @@ while True:
                 
                 args = parser.parse_args()
                 
-                current_prompt = args.prompt
+                if debate_mode == "Off":
+                    current_prompt = args.prompt
+                elif debate_mode == "On":
+                    current_prompt = f"Debate the topic of {debate_input}"
                 for i in range(args.exchanges):
+                    if i >= args.exchanges - rng.randint(1,args.exchanges) and debate_mode == "Off":
+                        instruction = f"""when talking add some attitude and life to the conversation, be as informal as possiable, you can add in some phylosophical speech now and then but sound natural. repond to the prompt as you normally would but incorporate the topic of {rng.choice(rand_prompt)} into the conversation seemlessly and relate the two, make sure to tie them together in the conversation as smooth as possiable. repond to the prompt as you normally would incorporate a question about the conversation as seemlessly as possiable. """   
+                    elif debate_mode == "On" and debate_rand == False: 
+                        instruction = f"debate the topic of {debate_input} argue the point opposite of the prompt, giving facts and the best evidence for your position "
+                    elif debate_mode == "On" and debate_rand == True:
+                        instruction = f"debate the topic of {rng.choice(debate_topic)} argue the point opposite of the prompt, giving facts and the best evidence for your position "
+                    else:
+                        instruction = instruction
+                    
                     logging.info(f"Exchange {i + 1}/{args.exchanges}\n")
                     
                     # Query first model
@@ -305,16 +314,7 @@ while True:
                     time.sleep(int(sleep_time))
                     
 
-                    # !!!!redo this prompt -- add condensed sentences!!!!
-                    if i >= args.exchanges - rng.randint(1,args.exchanges) and debate_mode == "Off":
-                        instruction = f"""when talking add some attitude and life to the conversation, be as informal as possiable, you can add in some phylosophical speech now and then but sound natural. repond to the prompt as you normally would but incorporate the topic of {rng.choice(rand_prompt)} into the conversation seemlessly and relate the two, make sure to tie them together in the conversation as smooth as possiable. repond to the prompt as you normally would incorporate a question about the conversation as seemlessly as possiable. """   
-                    elif debate_mode == "On" and debate_rand == False: 
-                        instruction = f"debate the topic of {debate_input} argue the point opposite of the prompt, giving facts and the best evidence for your position "
-                    elif debate_mode == "On" and debate_rand == True:
-                        instruction = f"debate the topic of {rng.choice(debate_topic)} argue the point opposite of the prompt, giving facts and the best evidence for your position "
-                    else:
-                        instruction = instruction
-                    #logging.info(f"Current instruction: {instruction}")
+                    
                     current_prompt = response2 
                   
                 conversation_active = False
