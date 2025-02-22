@@ -9,7 +9,7 @@ import random as rng
 import json 
 import os
 from pynput import keyboard
-import threading
+# import threading
 
 def load_config():
     config_path = os.path.join(os.path.dirname(__file__), "config.json")
@@ -89,72 +89,90 @@ starting_prompt = "pick any random conversational topic, and add a one paragraph
 model1_choice = rng.randint(0,3)
 model2_choice = rng.randint(0,3)
 sleep_time = 1
-instruction = """ when talking add some attitude and life to the conversation, 
-be as informal as possiable, you can add in some phylosophical speech now and then but 
-sound natural, dont say hey there or hey man all the time.repond to the prompt as you normally would incorporate a question about the 
-conversation as seemlessly as possiable. """
+instruction_list = config["instruction_key"]
+instruction = " ".join(instruction_list)
+
 
 
 while True:
     stop_flag = False
     conversation_active = False
-    selection = input("""\nSelect the following:
-                MODEL = Model selections
-                PROMPT = Initial prompt to start conversation
-                CONVO = # of conversations between movels
-                SLEEP = Time waited between model responses
-                INSTRUCTION = specific behavior instructions for model.
-                DEBATE = Start AI Debate mode (Yes/No)
-                TOPIC = Enter debate topic      
-                DONE = Start AI Conversations
-                      
-                QUIT = Quit Program
+    selection = input("""\nSelect one of the following:
+                
+                START 
+
+                OPTIONS
+                  
+                QUIT 
                     
                 Enter Selection: """)
     print("\n")
     
     match selection.upper():
-        case "MODEL":
-            print("Available models:", model)
-            model1_choice = input("Enter index of model 1: ")
-            model2_choice = input("Enter index of model 2: ")
-        case "PROMPT":
-            starting_prompt = input("Enter starting prompt: ")
-        case "CONVO":
-            convo_num = input("Enter number of conversations: ")
-        case "SLEEP":
-            sleep_time = input("Enter time waited between model responses (in seconds): ")
-        case "INSTRUCTION":
-            instruction = input("Enter instruction for model to follow: ")
-        case "DEBATE":
-            debate_mode = True
-            print("Debate mode enabled.")
-            time.sleep(3)
-        case "TOPIC":
-            if debate_mode == False:
-                print("Debate mode not enabled.")
-                time.sleep(3)
-            else:
-                debate_input = input("Enter debate topic: ")
-
+        case "OPTIONS":
+            while True:
+                option_selection = input("""\nSelect the following:
+                                         
+                MODEL        (Model selections)
+                
+                PROMPT       (Initial prompt to start conversation)
+                CONVO        (# of conversations between movels)
+                INSTRUCTION  (specific behavior instructions for model)
+                
+                DEBATE       (Start AI Debate mode (Yes/No))
+                TOPIC        (Enter debate topic)      
+                
+                BACK         (Return to main menu)
+               
+                Enter Selection: """)
+                match option_selection.upper():
+                    case "MODEL":
+                        print("Available models:", model)
+                        model1_choice = input("Enter index of model 1: ")
+                        model2_choice = input("Enter index of model 2: ")
+                    case "PROMPT":
+                        print(f"\nCurrent prompt: {starting_prompt}\n")
+                        starting_prompt = input("\nEnter starting prompt: ")
+                    case "CONVO":
+                        print("\nCurrent number of conversations is random!\n")
+                        convo_num = input("Enter number of conversations: ")
+                    case "INSTRUCTION":
+                        print(f"\nCurrent instruction: {instruction}\n")
+                        instruction = input("Enter instruction for model to follow: ")
+                    case "DEBATE":
+                        debate_switch = input("\nWould you like to start debate mode? (Yes/No): ")
+                        if debate_switch.upper() == "YES":
+                            debate_mode = True
+                            print("Debate mode enabled.")
+                            time.sleep(3)
+                        else:
+                            print("Debate mode disabled.")
+                    case "TOPIC":
+                        if debate_mode == False:
+                            print("Debate mode not enabled.")
+                            time.sleep(3)
+                        else:
+                            debate_input = input("Enter debate topic: ")
+                    case "BACK":
+                        break
         case "QUIT":
             print("Goodbye!")
             time.sleep(3)
             exit()
-        case "DONE":
-            print(f"""
+        case "START":
+            # print(f"""
                   
-                  The following settings will be applied: 
+            #       The following settings will be applied: 
                  
-                  -model 1 choice: {model[int(model1_choice)]}
-                  -model 2 choice: {model[int(model2_choice)]}
-                  -starting prompt: {starting_prompt}
-                  -convo number: {convo_num}
-                  -sleep time: {int(sleep_time)} seconds
-                  -instruction: {instruction}
+            #       -model 1 choice: {model[int(model1_choice)]}
+            #       -model 2 choice: {model[int(model2_choice)]}
+            #       -starting prompt: {starting_prompt}
+            #       -convo number: {convo_num}
+            #       -sleep time: {int(sleep_time)} seconds
+            #       -instruction: {instruction}
                   
-                  """)
-            time.sleep(5)
+            #       """)
+            # time.sleep(1)
             
 
 

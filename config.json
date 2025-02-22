@@ -40,8 +40,13 @@
      "Is the moon landing fake?",
      "Is the government hiding aliens?",
      "Is the government hiding time travel?",
-     "Is the government hiding the cure for cancer?"]
+     "Is the government hiding the cure for cancer?"],
 
-   
-    
+    "instruction_key":["when talking add some attitude and life to the conversation", 
+    "be as informal as possiable, but do not start with a greeting of any sort.", 
+    "you can add in some phylosophical speech now and then but sound natural,",
+    "dont say hey there or hey man all the time.",
+    "repond to the prompt as you normally would incorporate a question about the conversation as seemlessly as possiable."]  
+
+
 }
