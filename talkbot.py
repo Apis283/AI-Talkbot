@@ -116,7 +116,7 @@ while True:
                 CONVO        (# of conversations between movels)
                 INSTRUCTION  (specific behavior instructions for model)
                 
-                DEBATE       (Start AI Debate mode (Yes/No))
+                DEBATE       (Activate Debate Mode (On/Off))
                 TOPIC        (Enter debate topic)      
                 
                 BACK         (Return to main menu)
@@ -180,6 +180,7 @@ while True:
                         debate_switch = input("\nDebate mode (On/Off): ")
                         if debate_switch.upper() == "ON":
                             debate_mode = "On"
+                            debate_rand = True
                             print("Debate mode enabled.")
                             time.sleep(3)
                         elif debate_switch.upper() == "OFF":
@@ -251,15 +252,18 @@ while True:
                 
                 if debate_mode == "Off":
                     current_prompt = args.prompt
-                elif debate_mode == "On":
-                    current_prompt = f"Debate the topic of {debate_input}"
+                elif debate_mode == "On" and debate_rand == False:
+                    current_prompt = f"Debate the topic of {debate_input}."
+                    instruction = instruction + f"debate the point opposite of the prompt, giving facts and the best evidence for your position "
+                elif debate_mode == "On" and debate_rand == True:
+                    instruction = f"debate the topic of {rng.choice(debate_topic)}"
+                    instruction = instruction + f"debate the point opposite of the prompt, giving facts and the best evidence for your position "
+               
                 for i in range(args.exchanges):
                     if i >= args.exchanges - rng.randint(1,args.exchanges) and debate_mode == "Off":
-                        instruction = f"""when talking add some attitude and life to the conversation, be as informal as possiable, you can add in some phylosophical speech now and then but sound natural. repond to the prompt as you normally would but incorporate the topic of {rng.choice(rand_prompt)} into the conversation seemlessly and relate the two, make sure to tie them together in the conversation as smooth as possiable. repond to the prompt as you normally would incorporate a question about the conversation as seemlessly as possiable. """   
-                    elif debate_mode == "On" and debate_rand == False: 
-                        instruction = f"debate the topic of {debate_input} argue the point opposite of the prompt, giving facts and the best evidence for your position "
-                    elif debate_mode == "On" and debate_rand == True:
-                        instruction = f"debate the topic of {rng.choice(debate_topic)} argue the point opposite of the prompt, giving facts and the best evidence for your position "
+                        instruction = instruction + f"""repond to the prompt as you normally would but incorporate the topic of 
+                        {rng.choice(rand_prompt)} into the conversation seemlessly and relate the two.
+                        make sure to tie them together in the conversation as smooth as possiable."""   
                     else:
                         instruction = instruction
                     
