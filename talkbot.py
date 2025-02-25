@@ -256,7 +256,7 @@ while True:
                     current_prompt = f"Debate the topic of {debate_input}."
                     instruction = instruction + f"debate the point opposite of the prompt, giving facts and the best evidence for your position "
                 elif debate_mode == "On" and debate_rand == True:
-                    instruction = f"debate the topic of {rng.choice(debate_topic)}"
+                    current_prompt = f"debate the topic of {rng.choice(debate_topic)}"
                     instruction = instruction + f"debate the point opposite of the prompt, giving facts and the best evidence for your position "
                
                 for i in range(args.exchanges):
