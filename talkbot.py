@@ -111,10 +111,10 @@ def start_conversation(
             wrapped_para = textwrap.fill(para, width=100)
             output_widget1.append(wrapped_para)
             output_widget1.append("\n")
-        output_widget1.append(
-            "________________(press spacebar to end)________________ "
-        )
-        output_widget1.append("\n")
+        # output_widget1.append(
+        #     "________________(press spacebar to end)________________ "
+        # )
+        # output_widget1.append("\n")
 
         # Query second model with first model's response as prompt
         response2 = query_model(model2_choice, response1, instruction)
@@ -128,10 +128,10 @@ def start_conversation(
             wrapped_para = textwrap.fill(para, width=100)
             output_widget2.append(wrapped_para)
             output_widget2.append("\n")
-        output_widget2.append(
-            "________________(press spacebar to end)________________ "
-        )
-        output_widget2.append("\n")
+        # output_widget2.append(
+        #     "________________(press spacebar to end)________________ "
+        # )
+        # output_widget2.append("\n")
 
         if i >= convo_num - rng.randint(1, convo_num) and debate_mode == 0:
             instruction = f"""when talking add some attitude and life to the conversation, be as informal as possiable, you can add in some phylosophical speech now and then but sound natural. repond to the prompt as you normally would but incorporate the topic of {rng.choice(rand_prompt)} into the conversation seemlessly and relate the two, make sure to tie them together in the conversation as smooth as possiable. repond to the prompt as you normally would incorporate a question about the conversation as seemlessly as possiable. """
@@ -151,7 +151,7 @@ def create_main_window():
     window.setGeometry(100, 100, 800, 600)  # x, y, width, height
 
     # Set the background color of the main window
-    window.setStyleSheet("background-color: rgba(92, 105, 35, 255);")
+    window.setStyleSheet("background-color: rgba(92, 105, 35, 255); color: white;")
 
     layout = QGridLayout()
 
@@ -165,6 +165,7 @@ def create_main_window():
 
     model_combo1 = QComboBox(window)
     model_combo1.addItems(config["model"])
+    model_combo1.setStyleSheet("background-color: black; color: white;")
     layout.addWidget(model_combo1, 1, 1)
 
     model_label2 = QLabel("Model 2:", window)
@@ -172,12 +173,14 @@ def create_main_window():
 
     model_combo2 = QComboBox(window)
     model_combo2.addItems(config["model"])
+    model_combo2.setStyleSheet("background-color: black; color: white;")
     layout.addWidget(model_combo2, 2, 1)
 
     prompt_label = QLabel("Starting Prompt:", window)
     layout.addWidget(prompt_label, 3, 0)
 
     prompt_input = QLineEdit(window)
+    prompt_input.setStyleSheet("background-color: black; color: white;")
     layout.addWidget(prompt_input, 3, 1)
 
     convo_label = QLabel("Number of Conversations:", window)
@@ -185,12 +188,14 @@ def create_main_window():
 
     convo_spin = QSpinBox(window)
     convo_spin.setRange(1, 1000)
+    convo_spin.setStyleSheet("background-color: black; color: white;")
     layout.addWidget(convo_spin, 4, 1)
 
     instruction_label = QLabel("Instruction:", window)
     layout.addWidget(instruction_label, 5, 0)
 
     instruction_input = QTextEdit(window)
+    instruction_input.setStyleSheet("background-color: black; color: white;")
     layout.addWidget(instruction_input, 5, 1)
 
     # Create a QHBoxLayout for the buttons
@@ -199,7 +204,7 @@ def create_main_window():
     start_button = QPushButton("Start", window)
     start_button.setFixedWidth(100)  # Set fixed width for the start button
     start_button.setStyleSheet(
-        "background-color: lightblue;"
+        "background-color: rgba(41, 89, 36, 255);"
     )  # Set background color for the start button
     button_layout.addWidget(start_button)
 
@@ -214,7 +219,7 @@ def create_main_window():
     output_widget1 = QTextEdit(window)
     output_widget1.setReadOnly(True)
     output_widget1.setStyleSheet(
-        "background-color: white;"
+        "background-color: black;"
     )  # Set background color for the QTextEdit widget
     output_widget1_layout.addWidget(output_label1)
     output_widget1_layout.addWidget(output_widget1)
@@ -225,7 +230,7 @@ def create_main_window():
     output_widget2 = QTextEdit(window)
     output_widget2.setReadOnly(True)
     output_widget2.setStyleSheet(
-        "background-color: white;"
+        "background-color: black;"
     )  # Set background color for the QTextEdit widget
     output_widget2_layout.addWidget(output_label2)
     output_widget2_layout.addWidget(output_widget2)
@@ -240,7 +245,7 @@ def create_main_window():
     quit_button = QPushButton("Quit", window)
     quit_button.setFixedWidth(100)  # Set fixed width for the quit button
     quit_button.setStyleSheet(
-        "background-color: lightcoral;"
+        "background-color: rgba(110, 32, 32, 255);"
     )  # Set background color for the quit button
     layout.addWidget(quit_button, 8, 0, 1, 2, alignment=Qt.AlignCenter)
 
