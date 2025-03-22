@@ -255,11 +255,14 @@ while True:
                 if debate_mode == "On" and debate_rand == False:
                     starting_prompt = f"Debate the topic of {debate_input}."
                     instruction = instruction + f"ALWAYS debate the point opposite of the prompt, giving facts and the best evidence for your position, Never agree with the side of the prompt even if you believe it is true, work on debunking the prompt."
+                    current_prompt = starting_prompt
                 elif debate_mode == "On" and debate_rand == True:
                     starting_prompt = f"debate the topic of {rng.choice(debate_topic)}"
                     instruction = instruction + f"debate the point opposite of the prompt, giving facts and the best evidence for your position "
-                
-                current_prompt = args.prompt
+                    current_prompt = starting_prompt
+                else:
+                    current_prompt = args.prompt
+                # current_prompt = args.prompt
                 for i in range(args.exchanges):
                     if i >= args.exchanges - rng.randint(1,args.exchanges) and debate_mode == "Off":
                         instruction = instruction + f"""respond to the prompt as you normally would but incorporate the topic of 
