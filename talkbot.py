@@ -222,7 +222,7 @@ while True:
             
 
             def main():
-                global instruction, stop_flag, conversation_active, starting_prompt
+                global instruction, stop_flag, conversation_active, starting_prompt, debate_instruction
                 conversation_active = True
                 # Parse arguments for conversation settings.
                 parser = argparse.ArgumentParser(
@@ -255,10 +255,12 @@ while True:
                 if debate_mode == "On" and debate_rand == False:
                     starting_prompt = f"Debate the topic of {debate_input}."
                     instruction = instruction + f"ALWAYS debate the point opposite of the prompt, giving facts and the best evidence for your position, Never agree with the side of the prompt even if you believe it is true, work on debunking the prompt."
+                    debate_instruction = instruction
                     current_prompt = starting_prompt
                 elif debate_mode == "On" and debate_rand == True:
                     starting_prompt = f"debate the topic of {rng.choice(debate_topic)}"
                     instruction = instruction + f"debate the point opposite of the prompt, giving facts and the best evidence for your position "
+                    debate_instruction = instruction
                     current_prompt = starting_prompt
                 else:
                     current_prompt = args.prompt
@@ -323,7 +325,7 @@ while True:
                     
 
                     
-                    current_prompt = response2 
+                    current_prompt = response2 + debate_instruction
                   
                 conversation_active = False
                 stop_flag = False

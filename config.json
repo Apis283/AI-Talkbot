@@ -2,7 +2,8 @@
     "model":["dolphin-mistral",
      "dolphin-phi", 
      "wizard-vicuna-uncensored:13b",
-     "llama2-uncensored"],
+     "llama2-uncensored",
+     "goekdenizguelmez/JOSIEFIED-Qwen2.5:14b"],
 
     "rand_prompt":["Hitler",
      "Aliens",
@@ -47,7 +48,7 @@
     "be as informal as possiable, but do not start with a greeting of any sort.", 
     "you can add in some phylosophical speech now and then but sound natural,",
     "dont say hey there or hey man all the time.",
-    "repond to the prompt as you normally would incorporate a question about the conversation as seemlessly as possiable.",
+    "repond to the prompt as you normally would, incorporate a question about the conversation as seemlessly as possiable into the response.",
     "dont be afraid to ask questions about the prompt or the conversation.",
     "keep the reply down to two paragraphs at most."]
 
