@@ -82,12 +82,13 @@ stop_flag = False
 conversation_active = False
 debate_input = ""
 convo_num = rng.randint(10,500)
-starting_prompt = "pick any random conversational topic, and add a one paragraph explination"
 model1_choice = rng.randint(0,3)
 model2_choice = rng.randint(0,3)
 sleep_time = 1
 instruction_list = config["instruction_key"]
 instruction = " ".join(instruction_list)
+# starting_list= config["starting_prompt"]
+starting_prompt = "pick any random conversational topic, and add a one paragraph explination"  
 debate_instruction = ""
 
 
@@ -199,6 +200,7 @@ while True:
                             if debate_choice.upper() == "YES":
                                 debate_input = input("Enter debate topic: ")
                                 print(f'Debate topic set to "{debate_input}".')
+                                debate_rand = False
                                 time.sleep(3)
                             elif debate_choice.upper() == "NO":
                                 print("\nDebate topic will be picked randomly.\n")
@@ -220,7 +222,7 @@ while True:
             
 
             def main():
-                global instruction, stop_flag, conversation_active
+                global instruction, stop_flag, conversation_active, starting_prompt
                 conversation_active = True
                 # Parse arguments for conversation settings.
                 parser = argparse.ArgumentParser(
@@ -250,18 +252,17 @@ while True:
                 
                 args = parser.parse_args()
                 
-                if debate_mode == "Off":
-                    current_prompt = args.prompt
-                elif debate_mode == "On" and debate_rand == False:
-                    current_prompt = f"Debate the topic of {debate_input}."
-                    instruction = instruction + f"debate the point opposite of the prompt, giving facts and the best evidence for your position "
+                if debate_mode == "On" and debate_rand == False:
+                    starting_prompt = f"Debate the topic of {debate_input}."
+                    instruction = instruction + f"ALWAYS debate the point opposite of the prompt, giving facts and the best evidence for your position, Never agree with the side of the prompt even if you believe it is true, work on debunking the prompt."
                 elif debate_mode == "On" and debate_rand == True:
-                    instruction = f"debate the topic of {rng.choice(debate_topic)}"
+                    starting_prompt = f"debate the topic of {rng.choice(debate_topic)}"
                     instruction = instruction + f"debate the point opposite of the prompt, giving facts and the best evidence for your position "
-               
+                
+                current_prompt = args.prompt
                 for i in range(args.exchanges):
                     if i >= args.exchanges - rng.randint(1,args.exchanges) and debate_mode == "Off":
-                        instruction = instruction + f"""repond to the prompt as you normally would but incorporate the topic of 
+                        instruction = instruction + f"""respond to the prompt as you normally would but incorporate the topic of 
                         {rng.choice(rand_prompt)} into the conversation seemlessly and relate the two.
                         make sure to tie them together in the conversation as smooth as possiable."""   
                     else:
