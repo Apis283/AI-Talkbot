@@ -118,7 +118,10 @@ while True:
                 INSTRUCTION  (specific behavior instructions for model)
                 
                 DEBATE       (Activate Debate Mode (On/Off))
-                TOPIC        (Enter debate topic)      
+                TOPIC        (Enter debate topic)
+
+                READ         (Read chat history - not implimented)
+                CLEAR        (Clear chat history - not implimented)      
                 
                 BACK         (Return to main menu)
                
@@ -167,10 +170,10 @@ while True:
                             time.sleep(3)
                     case "INSTRUCTION":
                         print(f"\nCurrent instruction: {instruction}\n")
-                        instruciton_choice = input("\nWould you like to change the instruction? (Yes/No): ")
-                        if instruciton_choice.upper() == "YES":
+                        instruction_choice = input("\nWould you like to change the instruction? (Yes/No): ")
+                        if instruction_choice.upper() == "YES":
                             instruction = input("Enter instruction for model to follow: ")
-                        elif instruciton_choice.upper() == "NO":
+                        elif instruction_choice.upper() == "NO":
                             print("\nInstruction will stay the same.\n")
                             time.sleep(3)
                         else:
@@ -280,52 +283,53 @@ while True:
                     if response1 is None or stop_flag:
                         logging.error("Conversation terminated.")
                         break
+
+                    # Append model1's response to chat.txt
+                    with open("chat.txt", "a") as chat_file:
+                        chat_file.write(f"{args.model1}: {response1}\n")
+
+                    # Print response to user
                     paragraphs1 = split_into_paragraphs(f"{args.model1}: {response1}", sentences_per_paragraph=4)
-                   
-                   
                     for para in paragraphs1:
                         if stop_flag:
                             break
                         wrapped_para = textwrap.fill(para, width=100)
                         scrolling_text(wrapped_para)
-                        print()  # Add an extra line break between paragraphs
-                    print("________________(press esc to end)________________ ")
-                    print("\n")
+                        print()  
+                    print("________________(press esc to end)________________ \n")
                     
                     if stop_flag:
-                        break                  
-                    
-                    
+                        break
                     time.sleep(int(sleep_time))
-                    
 
-
-                    # Query second model with first model's response as prompt
+                    # Query second model using the previous response as context
                     response2 = query_model(args.model2, response1)
                     if response2 is None or stop_flag:
                         logging.error("Conversation terminated.")
                         break
+
+                    # Append model2's response to chat.txt
+                    with open("chat.txt", "a") as chat_file:
+                        chat_file.write(f"{args.model2}: {response2}\n")
+
                     paragraphs2 = split_into_paragraphs(f"{args.model2}: {response2}", sentences_per_paragraph=4)
-                    
-                    
                     for para in paragraphs2:
                         if stop_flag:
                             break
                         wrapped_para = textwrap.fill(para, width=100)
                         scrolling_text(wrapped_para)
-                        print()  # Add an extra line break between paragraphs
-                    print("________________(press esc to end)________________ ")
-                    print("\n")
+                        print()  
+                    print("________________(press esc to end)________________ \n")
                     
                     if stop_flag:
                         break
-
-
                     time.sleep(int(sleep_time))
                     
-
-                    
-                    current_prompt = response2 + debate_instruction
+                    # When building new prompt, load saved history as context for RAG if needed:
+                    with open("chat.txt", "r") as chat_file:
+                        conversation_history = chat_file.read()
+                    # Prepend conversation_history to new prompt (or integrate it accordingly)
+                    current_prompt = conversation_history + "\n" + response2
                   
                 conversation_active = False
                 stop_flag = False
@@ -337,5 +341,5 @@ while True:
                     stop_flag = True
                     conversation_active = False
                     continue
-            
+
 
